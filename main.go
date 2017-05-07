@@ -70,9 +70,9 @@ var todos *Todos
 func main() {
 
 	todos = NewTodos()
-	ret.Add(&Todo{Title: "Title 1", Body: "Body 1"})
-	ret.Add(&Todo{Title: "Title 2", Body: "Body 2"})
-	ret.Add(&Todo{Title: "Title 3", Body: "Body 3"})
+	todos.Add(&Todo{Title: "Title 1", Body: "Body 1"})
+	todos.Add(&Todo{Title: "Title 3", Body: "Body 3"})
+	todos.Add(&Todo{Title: "Title 2", Body: "Body 2"})
 
 	r := mux.NewRouter()
 

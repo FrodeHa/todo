@@ -36,10 +36,6 @@ func NewTodos() *Todos {
 		todos: []Todo{},
 	}
 
-	ret.Add(&Todo{Title: "Title 1", Body: "Body 1"})
-	ret.Add(&Todo{Title: "Title 2", Body: "Body 2"})
-	ret.Add(&Todo{Title: "Title 3", Body: "Body 3"})
-
 	return &ret
 }
 
@@ -74,6 +70,10 @@ var todos *Todos
 func main() {
 
 	todos = NewTodos()
+	ret.Add(&Todo{Title: "Title 1", Body: "Body 1"})
+	ret.Add(&Todo{Title: "Title 2", Body: "Body 2"})
+	ret.Add(&Todo{Title: "Title 3", Body: "Body 3"})
+
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", renderPage).Methods("GET")

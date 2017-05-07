@@ -1,0 +1,65 @@
+<html>
+
+<head>
+    <title>Todo app</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+    <body>
+        <h3>Todos</h3>
+        <ul id="todos">
+        </ul>
+        <div>
+            <input type="text" id="title" hint="Title" />
+            <input type="text" id="data" hint="Data" />
+            <input type="button" id="submit" value="Submit">
+        </div>
+
+    </body>
+    <script>
+        window.onload = function () {
+            var todos = $("#todos")
+            $.ajax({
+                type: 'get',
+                url: '/todos',
+                success: function (res) {
+                    res.forEach(function (todo) { return appendTodo(todo, todos) })
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+
+            $('#submit').on('click', function () {
+                var title = $("#title")[0]
+                var body = $("#data")[0]
+                $.ajax({
+                    type: 'post',
+                    url: '/todos',
+                    contentType: "application/json",
+                    data: JSON.stringify({ Title: title.value, Body: body.value }),
+                    dataType: 'json',
+                    success: function (res) { 
+                        appendTodo(res, todos)
+                        body.value = ""
+                        title.value = ""
+                    }
+                })
+            })
+
+            function appendTodo(todo, todos) {
+                var t = $('<li id="'+todo.ID+'"><h4>'+todo.ID + ' - ' + todo.Title + '</h4><span>' + todo.Body + '</span></li>')
+                    .on('click', function (e) {
+                        $.ajax({
+                            type: 'delete',
+                            url: '/todos/' + todo.ID,
+                            success: function () {
+                                $('#'+todo.ID).remove()
+                            }
+                        });
+                    });
+                todos.append(t);
+            }
+        }
+    </script>
+
+</html>

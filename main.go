@@ -8,6 +8,8 @@ import (
 	"strconv"
 	"sync"
 
+	"os"
+
 	"github.com/gorilla/mux"
 )
 
@@ -76,13 +78,13 @@ func main() {
 
 	r := mux.NewRouter()
 
-	r.HandleFunc("/", renderPage).Methods("GET")
-	r.HandleFunc("/todos", getTodos).Methods("GET")
-	r.HandleFunc("/todos", createTodo).Methods("POST")
-	r.HandleFunc("/todos/{id:[0-9]+}", removeTodo).Methods("DELETE")
+	r.HandleFunc("/"+os.Args[1], renderPage).Methods("GET")
+	r.HandleFunc("/"+os.Args[1]+"/todos", getTodos).Methods("GET")
+	r.HandleFunc("/"+os.Args[1]+"/todos", createTodo).Methods("POST")
+	r.HandleFunc("/"+os.Args[1]+"/todos/{id:[0-9]+}", removeTodo).Methods("DELETE")
 
 	http.Handle("/", r)
-	http.ListenAndServe(":3000", nil)
+	http.ListenAndServe(":"+os.Args[2], nil)
 }
 
 func renderPage(w http.ResponseWriter, r *http.Request) {
@@ -119,6 +121,7 @@ func createTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 func getTodos(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Query())
 	b, err := json.Marshal(todos.All())
 	if err != nil {
 		writeErrorResponse(w, http.StatusInternalServerError, []byte("Internal server error"))
